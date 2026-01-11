@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <title>Vælg holdstørrelse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body>
+
+<h1>Vælg holdstørrelse</h1>
+
+<p id="summary"></p>
+
+<div id="options"></div>
+
+<div class="back-button">
+    <a href="index.html">← Tilbage</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const selectedPlayers = JSON.parse(
+        sessionStorage.getItem('floorball_selected_players') || '[]'
+    );
+
+    const presentCount = selectedPlayers.length;
+    const summary = document.getElementById('summary');
+    const options = document.getElementById('options');
+
+    if (presentCount === 0) {
+        summary.textContent = 'Ingen spillere valgt.';
+        return;
+    }
+
+    summary.innerHTML = `<strong>${presentCount}</strong> spillere valgt`;
+
+    const teamSizes = [3, 4, 5, 6];
+
+    teamSizes.forEach(size => {
+        const minPlayers = size * 2;
+        const enabled = presentCount >= minPlayers;
+
+        const teams = Math.floor(presentCount / size);
+        const rest = presentCount % size;
+
+        const button = document.createElement('button');
+        button.className = 'team-option';
+        button.disabled = !enabled;
+
+        let description = `${teams} hold`;
+        if (rest > 0) {
+            description += ` · ${rest} i overskud`;
+        }
+
+        button.innerHTML = `
+            <div class="option-main">
+                <strong>${size} pr. hold</strong>
+            </div>
+            <div class="option-sub">
+                ${enabled
+                    ? description
+                    : `Kræver mindst ${minPlayers} spillere`
+                }
+            </div>
+        `;
+
+        if (enabled) {
+            button.addEventListener('click', () => {
+                sessionStorage.setItem(
+                    'floorball_team_size',
+                    size
+                );
+                window.location.href = 'teams.html';
+            });
+        }
+
+        options.appendChild(button);
+    });
+
+});
+</script>
+
+</body>
+</html>

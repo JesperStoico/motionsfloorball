@@ -1,0 +1,361 @@
+:root {
+    --sf-blue: #2f6f8f;        /* muted shield blue */
+    --sf-blue-light: #e6f0f5; /* very soft blue highlight */
+    --sf-yellow: #d6c24a;     /* muted crown yellow */
+    --sf-yellow-soft: #f5f2d6;
+    --sf-dark: #2b2b2b;       /* near-black */
+    --sf-grey: #6b6b6b;
+    --sf-border: #dcdcdc;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #ffffff;
+    color: var(--sf-dark);
+    padding-bottom: 80px; /* space for bottom bar */
+}
+
+h1 {
+    color: var(--sf-blue);
+}
+
+
+#teamSizeControl {
+    margin-top: 20px;
+}
+
+/* Player list rows */
+.player-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--sf-border);
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.player-row:hover {
+    background: #f7f9fa;
+}
+
+.player-row.selected {
+    background: var(--sf-blue-light);
+}
+
+
+/* Name + icons inline */
+.player-main {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.player-name {
+    font-size: 1.05rem;
+    color: var(--sf-dark);
+}
+
+/* Icons */
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.4rem;
+    opacity: 0.85;
+    line-height: 1.4; /* 👈 IMPORTANT */
+}
+
+.gender {
+    line-height: 1.4;
+    display: inline-flex;
+    align-items: center;
+}
+
+.runner {
+    color: var(--sf-yellow);
+}
+
+
+/* Checkbox (still there for accessibility) */
+.player-row input[type="checkbox"] {
+    transform: scale(1.2);
+    pointer-events: none;
+}
+
+#teamSizeControl h3 {
+    color: var(--sf-blue);
+}
+
+#teamSizeControl input[type="range"] {
+    accent-color: var(--sf-blue);
+}
+
+button {
+    background: var(--sf-blue);
+    color: #fff;
+    border: none;
+    padding: 12px 16px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #285d78;
+}
+
+.bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    background: #ffffff;
+    border-top: 1px solid var(--sf-border);
+    padding: 12px 16px;
+
+    display: flex;
+    justify-content: center;
+
+    z-index: 100;
+}
+
+.bottom-bar.hidden {
+    display: none;
+}
+
+/* Responsive spacing */
+@media (min-width: 600px) {
+    .player-row {
+        padding: 14px 20px;
+    }
+}
+
+#options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.team-option {
+    background: #ffffff;
+    border: 1px solid var(--sf-border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.team-option:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.team-option:not(:disabled):hover {
+    background: var(--sf-blue-light);
+}
+
+.option-main {
+    font-size: 1.1rem;
+    color: var(--sf-blue);
+}
+
+.option-sub {
+    font-size: 0.9rem;
+    color: var(--sf-grey);
+    margin-top: 6px;
+}
+
+.back-button {
+    margin-top: 24px;
+    text-align: center;
+}
+
+.back-button a {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid var(--sf-border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--sf-dark);
+    background: #ffffff;
+}
+
+.back-button a:hover {
+    background: var(--sf-blue-light);
+}
+
+/* Teams page */
+
+.teams-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.team {
+    background: #ffffff;
+    border: 1px solid var(--sf-border);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.team h3 {
+    margin: 0 0 10px 0;
+    color: var(--sf-blue);
+    font-size: 1.1rem;
+}
+
+/* Player rows inside team */
+.team .player {
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.team .player:last-child {
+    border-bottom: none;
+}
+
+/* Player meta (gender / runner) */
+.team .meta {
+    font-size: 0.85rem;
+    color: var(--sf-grey);
+    margin-left: 4px;
+}
+
+/* Optional: subtle color hint per team */
+.team[data-color="Orange"] h3 {
+    color: #c76b1f;
+}
+
+.team[data-color="Blue"] h3 {
+    color: var(--sf-blue);
+}
+
+.team[data-color="Yellow"] h3 {
+    color: #b8a700;
+}
+
+.team[data-color="Black"] h3 {
+    color: #333;
+}
+
+.team[data-color="White"] h3 {
+    color: #888;
+}
+
+@media (max-width: 700px) {
+    table thead {
+        display: none;
+    }
+
+    table, tbody, tr, td {
+        display: block;
+        width: 100%;
+    }
+
+    tr {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    td {
+        border: none;
+        padding: 4px 0;
+    }
+
+    td::before {
+        font-weight: bold;
+        display: inline-block;
+        width: 90px;
+        color: #666;
+    }
+
+    td.name::before { content: "Navn"; }
+    td.skill::before { content: "Skill"; }
+    td.gender::before { content: "Køn"; }
+    td.runner::before { content: "Runner"; }
+    td.active::before { content: "Aktiv"; }
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-edit {
+    background: #e6f0f5;
+    color: #2f6f8f;
+}
+
+.btn-toggle {
+    background: #f5f5f5;
+    color: #333;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.admin-top {
+    margin-bottom: 12px;
+}
+
+.admin-actions {
+    margin-bottom: 16px;
+}
+
+.player-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 480px;
+}
+
+.player-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.95rem;
+}
+
+.player-form input[type="text"],
+.player-form input[type="range"] {
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.range-value {
+    font-size: 0.9rem;
+    color: var(--sf-grey);
+}
+
+.checkbox,
+.radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+fieldset {
+    border: 1px solid var(--sf-border);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+legend {
+    padding: 0 6px;
+    font-size: 0.9rem;
+    color: var(--sf-grey);
+}

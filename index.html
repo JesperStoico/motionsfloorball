@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <title>Motions Floorball</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    let players = [];
+    let presentPlayerIds = new Set();
+
+    const playersContainer = document.getElementById('players');
+    const generateBtn = document.getElementById('generateTeamsBtn');
+
+    fetch('api/players.php')
+        .then(res => res.json())
+        .then(data => {
+            players = data;
+            renderPlayers();
+        })
+        .catch(() => {
+            playersContainer.innerHTML = '<p>Kunne ikke hente spillere</p>';
+        });
+
+    function renderPlayers() {
+        playersContainer.innerHTML = '';
+
+        if (players.length === 0) {
+            playersContainer.innerHTML = '<p>Ingen aktive spillere</p>';
+            return;
+        }
+
+        players.forEach(player => {
+            const row = document.createElement('div');
+            row.className = 'player-row';
+
+            const isSelected = presentPlayerIds.has(player.id);
+            if (isSelected) row.classList.add('selected');
+
+            row.innerHTML = `
+                <div class="player-main">
+                    <strong class="player-name">
+                        ${escapeHtml(player.name)}
+                    </strong>
+                    <span class="icons">
+                        <span class="gender">
+                            ${player.gender === 'male' ? '♂' : '♀'}
+                        </span>
+                        ${player.is_runner ? '<span class="runner">🏃</span>' : ''}
+                    </span>
+                </div>
+                <input type="checkbox" ${isSelected ? 'checked' : ''}>
+            `;
+
+            const checkbox = row.querySelector('input');
+
+            row.addEventListener('click', e => {
+                if (e.target.tagName === 'INPUT') return;
+                checkbox.checked = !checkbox.checked;
+                togglePlayer(player.id, row, checkbox.checked);
+            });
+
+            checkbox.addEventListener('change', () => {
+                togglePlayer(player.id, row, checkbox.checked);
+            });
+
+            playersContainer.appendChild(row);
+            
+            updateBottomBar();
+        });
+    }
+
+    function togglePlayer(id, row, checked) {
+        if (checked) {
+            presentPlayerIds.add(id);
+            row.classList.add('selected');
+        } else {
+            presentPlayerIds.delete(id);
+            row.classList.remove('selected');
+        }
+
+        updateBottomBar();
+    }
+
+    function updateBottomBar() {
+        const bottomBar = document.querySelector('.bottom-bar');
+
+        if (presentPlayerIds.size >= 6) {
+            bottomBar.style.display = 'flex';
+        } else {
+            bottomBar.style.display = 'none';
+        }
+    }
+
+
+    generateBtn.addEventListener('click', () => {
+        if (presentPlayerIds.size === 0) {
+            alert('Vælg mindst én spiller');
+            return;
+        }
+
+        const selectedPlayers = players.filter(p =>
+            presentPlayerIds.has(p.id)
+        );
+
+        sessionStorage.setItem(
+            'floorball_selected_players',
+            JSON.stringify(selectedPlayers)
+        );
+
+        window.location.href = 'choose-team-size.html';
+    });
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>"']/g, m => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        }[m]));
+    }
+
+});
+</script>
+
+<body>
+
+<h1>Motions Floorball</h1>
+
+<p>Vælg deltagere:</p>
+
+<div id="players">
+    <p>Indlæser spillere…</p>
+</div>
+
+<div class="bottom-bar">
+    <button id="generateTeamsBtn">
+        Opret holdene
+    </button>
+</div>
+
+
+</body>
+</html>
